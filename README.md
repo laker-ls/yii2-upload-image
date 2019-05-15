@@ -2,10 +2,10 @@
     yii2-upload-image
 </h1>
 
-[![Stable Version](https://poser.pugx.org/laker-ls/yii-upload-image-html-editor/v/stable)](https://packagist.org/packages/laker-ls/yii-upload-image-html-editor)
-[![Unstable Version](https://poser.pugx.org/laker-ls/yii-upload-image-html-editor/v/unstable)](https://packagist.org/packages/laker-ls/yii-upload-image-html-editor)
-[![License](https://poser.pugx.org/laker-ls/yii-upload-image-html-editor/license)](https://packagist.org/packages/laker-ls/yii-upload-image-html-editor)
-[![Total Downloads](https://poser.pugx.org/laker-ls/yii-upload-image-html-editor/downloads)](https://packagist.org/packages/laker-ls/yii-upload-image-html-editor)
+[![Stable Version](https://poser.pugx.org/laker-ls/yii2-upload-image/v/stable)](https://packagist.org/packages/laker-ls/yii2-upload-image)
+[![Unstable Version](https://poser.pugx.org/laker-ls/yii2-upload-image/v/unstable)](https://packagist.org/packages/laker-ls/yii2-upload-image)
+[![License](https://poser.pugx.org/laker-ls/yii2-upload-image/license)](https://packagist.org/packages/laker-ls/yii2-upload-image)
+[![Total Downloads](https://poser.pugx.org/laker-ls/yii2-upload-image/downloads)](https://packagist.org/packages/laker-ls/yii2-upload-image)
 
 Это расширение является поведением для yii2. Используется для загрузки изображений при использовании любых HTML редакторов и файловых менеджеров,
 например CKEditor и ELfinder. HTML редакторы передают изображение в строке следующего вида `<img alt="" src="/upload/global/test.jpg" style="height:853px; width:1280px" />`, 
@@ -13,8 +13,6 @@
 Расширение ищет изображения в указанных полях и перемещает их в другие папки, по умолчанию `/upload/image_full`, а так же создает миниатюры, по умолчанию 
 в `/upload/image_mini`. Размеры миниатюры получаются из `style`, если не указаны, то миниатюра будет реальных размеров, пути изображений заменяются на актуальные пути миниатюр. При удалении записи 
 приложение удаляет миниатюру и переносит оригинал изображения в место, куда загружает изображения файловый менеджер.
-
-> ВНИМАНИЕ: файлы не должны содержать кириллицу и пробелы в названии.
 
 ## Установка
 

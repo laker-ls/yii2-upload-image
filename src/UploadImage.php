@@ -123,11 +123,12 @@ class UploadImage extends Behavior
 
             foreach ($upload[1] as $key => $value) {
                 $pathInfo = pathinfo($value);
+                $basename = urldecode($pathInfo['basename']);
                 $time = time() + $key;
-                $uniqueName = md5($time . $pathInfo['basename']);
+                $uniqueName = md5($time . $basename);
                 $nameImg = $uniqueName . '.' . $pathInfo['extension'];
                 $folder = substr($nameImg, 0, 2);
-                $this->allPath($folder, $pathInfo['basename'], $nameImg);
+                $this->allPath($folder, $basename, $nameImg);
                 $this->imageFull();
                 $this->imageMini($upload[0][$key]);
                 $data['upload'] = str_replace($value, '/' . $this->folderMini . '/' . $nameImg, $data['upload']);
