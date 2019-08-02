@@ -2,6 +2,7 @@
 
 namespace lakerLS\HTMLfileManager;
 
+use app\myFolders\widgets\ViewHelper;
 use himiklab\thumbnail\EasyThumbnailImage;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
@@ -77,21 +78,37 @@ class UploadImage extends Behavior
     /**
      * Функция осуществляет выбор необходимых действий в зависимости от события, производит операции над каждым полем,
      * которое было передано в public $fields.
+     *
+     * Если запись создается, производится запись.
+     * Если запись редактируется, поиск изображений на удаление с последующим удалением.
      * @param object event
      */
     public function choiceEvent($event)
     {
+        $data = $event->sender;
         foreach ($this->owner->fields as $field) {
-            if (isset($event->sender->$field)) {
+            if (isset($data->$field)) {
                 if ($event->name == 'beforeInsert') {
-                    $event->sender->$field = $this->body(['upload' => $event->sender->$field]);
+                    $data->$field = $this->body(['upload' => $data->$field]);
                 } elseif ($event->name == 'beforeUpdate') {
-                    $event->sender->$field = $this->body([
-                        'delete' => $event->sender->getOldAttribute($field),
-                        'upload' => $event->sender->$field,
-                    ]);
+                    $deleteImg = $data->oldAttributes[$field];
+                    $recordImg = $data->attributes[$field];
+                    $imgIsset = '';
+                    preg_match_all('#<img.*src="(.*)".*>#isU', $deleteImg, $oldImg);
+                    preg_match_all('#<img.*src="(.*)".*>#isU', $recordImg, $newImg);
+                    foreach ($newImg[0] as $newKey => $new) {
+                        foreach ($oldImg[0] as $oldKey => $old) {
+                            if (strpos($old, $new) !== false) {
+                                $deleteImg = str_replace($new, '', $deleteImg);
+                                $recordImg = str_replace($new, '', $recordImg);
+                                $imgIsset .= $old;
+                            }
+                        }
+                    }
+                    $newUploadedImg = $this->body(['delete' => $deleteImg, 'upload' => $recordImg]);
+                    $data->$field = $imgIsset . $newUploadedImg;
                 } else {
-                    $this->body(['delete' => $event->sender->$field]);
+                    $this->body(['delete' => $data->$field]);
                 }
             }
         }
@@ -106,11 +123,11 @@ class UploadImage extends Behavior
      */
     protected function body($data)
     {
-        if (isset($data['delete'])) {
+        if (!empty($data['delete'])) {
             preg_match_all('#<img.*src="(.*)".*>#isU', $data['delete'], $delete);
 
-            foreach ($delete[1] as $value) {
-                $pathInfo = pathinfo($value);
+            foreach ($delete[1] as $img) {
+                $pathInfo = pathinfo($img);
                 $nameImg = $pathInfo['basename'];
                 $folder = substr($nameImg, 0, 2);
                 $this->allPath($folder, $pathInfo['basename'], $nameImg);
@@ -118,7 +135,7 @@ class UploadImage extends Behavior
             }
         }
 
-        if (isset($data['upload'])) {
+        if (!empty($data['upload'])) {
             preg_match_all('#<img.*src="(.*)".*>#isU', $data['upload'], $upload);
 
             foreach ($upload[1] as $key => $value) {
@@ -128,9 +145,11 @@ class UploadImage extends Behavior
                 $uniqueName = md5($time . $basename);
                 $nameImg = $uniqueName . '.' . $pathInfo['extension'];
                 $folder = substr($nameImg, 0, 2);
+
                 $this->allPath($folder, $basename, $nameImg);
                 $this->imageFull();
                 $this->imageMini($upload[0][$key]);
+
                 $data['upload'] = str_replace($value, '/' . $this->folderMini . '/' . $nameImg, $data['upload']);
             }
 
