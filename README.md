@@ -22,13 +22,13 @@
 Для установки запустите
 
 ```
-$ php composer.phar require laker-ls/yii2-upload-image "~1.0.2"
+$ php composer.phar require laker-ls/yii2-upload-image "~1.1.0"
 ```
 
 или добавьте в `composer.json` в раздел `require` следующую строку
 
 ```
-"laker-ls/yii2-upload-image": "~1.0.2"
+"laker-ls/yii2-upload-image": "~1.1.0"
 ```
 
 > Смотрите [список изменений](https://github.com/laker-ls/yii2-nested-set-menu/blob/master/CHANGE.md) для подробной информации о версиях.
@@ -41,6 +41,7 @@ $ php composer.phar require laker-ls/yii2-upload-image "~1.0.2"
 - `fields` должен содержать массив где перечислены поля, в которых необходимо обрабатывать изображения после HTML редактора.
 
 Не обязательные параметры:
+- `qualityThumbnail` качество создаваемой миниатюры от 1 до 100, по умолчанию 50.
 - `imageGlobal` содержит путь, в который файловый менеджер сохраняет изображения.
 - `imageFull` содержит путь, в который поведение будет сохранять изображения.
 - `imageMini` содержит путь, куда будет создана миниатюра.

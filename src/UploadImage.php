@@ -28,6 +28,11 @@ class UploadImage extends Behavior
     public $fields;
 
     /**
+     * @var qualityThumbnail integer качество создаваемой миниатюры.
+     */
+    public $qualityThumbnail = 50;
+
+    /**
      * Путь к "корневой" папке, куда пользователь может добавлять изображения с помощью
      * загрузчика изображений/файлов и откуда визуальный редактор берет картинки.
      */
@@ -187,10 +192,10 @@ class UploadImage extends Behavior
     protected function imageFull()
     {
         if (!is_dir($this->folderFull)) {
-            mkdir($this->folderFull, 0777);
+            mkdir($this->folderFull, 0777, true);
         }
         if (!is_dir($this->folderMini)) {
-            mkdir($this->folderMini, 0777);
+            mkdir($this->folderMini, 0777, true);
         }
         if (file_exists($this->imgGlobal) === true) {
             rename($this->imgGlobal, $this->imgFull);
@@ -222,7 +227,7 @@ class UploadImage extends Behavior
                 $width[1],
                 $height[1],
                 EasyThumbnailImage::THUMBNAIL_OUTBOUND,
-                100
+                $this->qualityThumbnail
             );
             rename(substr($createdMini, 1), $this->imgMini);
         } else {
