@@ -2,10 +2,10 @@
 
 namespace lakerLS\HTMLfileManager;
 
-use app\myFolders\widgets\ViewHelper;
 use himiklab\thumbnail\EasyThumbnailImage;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
+use Yii;
 
 /**
  * Прежде всего разрабатывалось для CKEditor и ELfinder, но так же может использоваться с любым аналогичным
@@ -26,11 +26,6 @@ class UploadImage extends Behavior
      * @var array $fields
      */
     public $fields;
-
-    /**
-     * @var qualityThumbnail integer качество создаваемой миниатюры.
-     */
-    public $qualityThumbnail = 50;
 
     /**
      * Путь к "корневой" папке, куда пользователь может добавлять изображения с помощью
@@ -179,9 +174,9 @@ class UploadImage extends Behavior
         $this->folderMini = $this->imageMini . '/' . $folder;
 
         // Полные пути изображений.
-        $this->imgGlobal = $this->imageGlobal . '/' . $basename;
-        $this->imgFull = $this->folderFull . '/' . $nameImg;
-        $this->imgMini = $this->folderMini . '/' . $nameImg;
+        $this->imgGlobal = Yii::getAlias('@webroot') . '/' . $this->imageGlobal . '/' . $basename;
+        $this->imgFull = Yii::getAlias('@webroot') . '/' . $this->folderFull . '/' . $nameImg;
+        $this->imgMini = Yii::getAlias('@webroot') . '/' . $this->folderMini . '/' . $nameImg;
     }
 
     /**
@@ -192,10 +187,10 @@ class UploadImage extends Behavior
     protected function imageFull()
     {
         if (!is_dir($this->folderFull)) {
-            mkdir($this->folderFull, 0777, true);
+            mkdir($this->folderFull, 0777);
         }
         if (!is_dir($this->folderMini)) {
-            mkdir($this->folderMini, 0777, true);
+            mkdir($this->folderMini, 0777);
         }
         if (file_exists($this->imgGlobal) === true) {
             rename($this->imgGlobal, $this->imgFull);
@@ -227,7 +222,7 @@ class UploadImage extends Behavior
                 $width[1],
                 $height[1],
                 EasyThumbnailImage::THUMBNAIL_OUTBOUND,
-                $this->qualityThumbnail
+                100
             );
             rename(substr($createdMini, 1), $this->imgMini);
         } else {
