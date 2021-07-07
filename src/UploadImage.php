@@ -187,10 +187,10 @@ class UploadImage extends Behavior
     protected function imageFull()
     {
         if (!is_dir($this->folderFull)) {
-            mkdir($this->folderFull, 0777);
+            mkdir($this->folderFull, 0777, true);
         }
         if (!is_dir($this->folderMini)) {
-            mkdir($this->folderMini, 0777);
+            mkdir($this->folderMini, 0777, true);
         }
         if (file_exists($this->imgGlobal) === true) {
             rename($this->imgGlobal, $this->imgFull);
